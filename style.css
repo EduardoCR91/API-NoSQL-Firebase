@@ -1,0 +1,177 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #e3e3e3;
+  color: #333;
+}
+
+.tabs, footer {
+  display: flex;
+  justify-content: space-around;
+  background: #3c89ad;
+  padding: 10px 0;
+  color: white;
+}
+
+.tabs button, footer button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.section {
+  padding: 20px;
+}
+
+.grid-container, .favoritos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+form input {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+}
+
+form button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: #4b89c3;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#infoClima div {
+  background: #b2dfdb;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/*#listaFavoritos li {
+  background: #80cbc4;
+  margin: 5px;
+  padding: 10px;
+  list-style: none;
+  border-radius: 5px;
+}
+*/
+
+#listaFavoritos {
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  padding: 1rem;
+  border-radius: 12px;
+  color: rgb(0, 0, 0);
+  background-size: cover;
+  background-position: center;
+  transition: background 0.5s ease;
+}
+
+/*.despejado {
+  background: linear-gradient(to top, #fdbb2d, #22c1c3);
+}*/
+
+/*.parcialmente-nublado {
+  background: linear-gradient(to top, #d7d2cc, #304352);
+}*/
+
+/*.nublado {
+  background: linear-gradient(to top, #bdc3c7, #2c3e50);
+  color: white;
+}*/
+
+.lluvia,
+.lluvia-ligera,
+.lluvia-moderada,
+.despejado,
+.nevada,
+.parcialmente-nublado,
+.nublado,
+.desconocido,
+.niebla,
+.chubascos-ligeros,
+.llovizna-intensa,
+.llovizna-ligera {
+  background: linear-gradient(to top, #c6cdd2, #547898);
+  color: white;
+}
+
+/*.nevada {
+  background: linear-gradient(to top, #83a4d4, #b6fbff);
+}*/
+
+/*.desconocido {
+  background: linear-gradient(to top, #232526, #414345);
+}*/
+
+.bg-video{
+  width: 230px;
+  height: auto;
+  border-radius: 15px;
+}
+
+/* Botón hamburguesa oculto en escritorio */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+}
+
+/* Modo responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    margin: 10px;
+    background: #3c89ad;
+  }
+
+  .tabs {
+    display: none;
+    flex-direction: column;
+    background: #3c89ad;
+    padding: 10px;
+  }
+
+  footer.tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background: #3c89ad;
+    padding: 10px 0;
+    color: white;
+  }
+
+  .tabs.show {
+    display: flex;
+  }
+
+  .tabs button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}

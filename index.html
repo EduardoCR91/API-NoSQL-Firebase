@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleInfo.css">
+</head>
+<body>
+  <!-- Menú de pestañas superior -->
+  
+  <header class="header">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <nav class="tabs" id="navMenu">
+      <button class="tab active" data-target="inicio">Inicio</button>
+      <button data-target="busqueda">Búsqueda</button>
+      <button data-target="filtrarPorClima">Filtro</button>
+      <button data-target="favoritos">Favoritos</button>
+      <button onclick="informacion()">Informacion</button>
+      <!--<button data-target="registro">Registro</button>-->
+      <button data-target="configuracion">Configuración</button>
+    </nav>
+  </header>
+
+
+  <div class="contenedor">
+
+    <!--Contenido autogenerado-->
+  </div>
+
+  <!-- Secciones -->
+  
+
+  <!-- Menú inferior -->
+  <footer class="tabs" id="navMenu">
+    <button data-target="inicio">Inicio</button>
+    <button data-target="favoritos">Favoritos</button>
+    <button data-target="registro">Registro</button>
+    <button data-target="configuracion">Config</button>
+  </footer>
+
+  <script src="js/app.js" type="module"></script>
+  <script src="js/informacion.js"></script>
+  <script src="js/menu.js"></script>
+
+  
+</body>
+</html>
