@@ -1,3 +1,5 @@
+import { doc } from "firebase/firestore";
+
 export const ciudades = {
   "Bogota": { lat: 4.7110, lon: -74.0721 },
   "Nueva York": { lat: 40.7128, lon: -74.0060 },
@@ -84,7 +86,7 @@ export const ciudades = {
   
   export async function mostrarTodasLasCiudades(ciudades) {
 
-    const contenedorMain = document.querySelector('.contenedor');
+    const contenedorMain = document.getElementById("app");
 
     contenedorMain.innerHTML = `  
     <section id="inicio" class="section">
