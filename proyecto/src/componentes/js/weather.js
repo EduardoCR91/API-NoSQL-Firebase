@@ -1,5 +1,3 @@
-import { doc } from "firebase/firestore";
-
 export const ciudades = {
   "Bogota": { lat: 4.7110, lon: -74.0721 },
   "Nueva York": { lat: 40.7128, lon: -74.0060 },
@@ -34,61 +32,83 @@ export const ciudades = {
   "Montevideo": { lat: -34.9011, lon: -56.1645 },
   "Asunción": { lat: -25.2637, lon: -57.5759 },
   "Brasilia": { lat: -15.7939, lon: -47.8828 },
-  "Río de Janeiro": { lat: -22.9068, lon: -43}
+  "Río de Janeiro": { lat: -22.9068, lon: -43.1729 }
 };
-  
-  export const codigosClima = {
-    0: "Despejado",
-    1: "Principalmente despejado",
-    2: "Parcialmente nublado",
-    3: "Nublado",
-    45: "Niebla",
-    48: "Niebla con escarcha",
-    51: "Llovizna-ligera",
-    53: "Llovizna-moderada",
-    55: "Llovizna-intensa",
-    61: "Lluvia-ligera",
-    63: "Lluvia-moderada",
-    65: "Lluvia-intensa",
-    71: "Nevada-ligera",
-    73: "Nevada-moderada",
-    75: "Nevada intensa",
-    80: "Chubascos-ligeros",
-    81: "Chubascos-moderados",
-    82: "Chubascos-violentos",
-    // puedes agregar más si quieres
-  };
-  
-  export async function obtenerClima(nombreCiudad) {
-    const { lat, lon } = ciudades[nombreCiudad];
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-  
+
+export const codigosClima = {
+  0: "Despejado",
+  1: "Principalmente despejado",
+  2: "Parcialmente nublado",
+  3: "Nublado",
+  45: "Niebla",
+  48: "Niebla con escarcha",
+  51: "Llovizna-ligera",
+  53: "Llovizna-moderada",
+  55: "Llovizna-intensa",
+  61: "Lluvia-ligera",
+  63: "Lluvia-moderada",
+  65: "Lluvia-intensa",
+  71: "Nevada-ligera",
+  73: "Nevada-moderada",
+  75: "Nevada intensa",
+  80: "Chubascos-ligeros",
+  81: "Chubascos-moderados",
+  82: "Chubascos-violentos",
+};
+
+export async function obtenerClima(nombreCiudad) {
+  // Verificar que la ciudad existe
+  if (!ciudades[nombreCiudad]) {
+    throw new Error(`Ciudad "${nombreCiudad}" no encontrada`);
+  }
+
+  const { lat, lon } = ciudades[nombreCiudad];
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+  try {
     const respuesta = await fetch(url);
+    if (!respuesta.ok) {
+      throw new Error(`Error HTTP: ${respuesta.status}`);
+    }
+    
     const datos = await respuesta.json();
-  
+
     const temperatura = Math.round(datos.current_weather.temperature);
     const codigo = datos.current_weather.weathercode;
     const tiempoActual = datos.current_weather.time;
     const estadoClima = codigosClima[codigo] ?? "desconocido";
-  
+
     return { temperatura, estadoClima, tiempoActual };
+  } catch (error) {
+    console.error(`Error obteniendo clima para ${nombreCiudad}:`, error);
+    throw error;
   }
-  
-  export function clasificarClima(estadoClima) {
-    const estado = estadoClima.toLowerCase();
-    if (estado.includes("lluvia") || estado.includes("lloviz") || estado.includes("chubasco")) return "lluvia";
-    if (estado.includes("nieve")) return "nieve";
-    if (estado.includes("nublado") || estado.includes("nublado")) return "nublado";
-    if (estado.includes("niebla")) return "niebla";
-    if (estado.includes("soleado") || estado.includes("despejado") || estado.includes("claro")) return "soleado";
-    return "otros";
+}
+
+export function clasificarClima(estadoClima) {
+  const estado = estadoClima.toLowerCase();
+  if (estado.includes("lluvia") || estado.includes("lloviz") || estado.includes("chubasco")) return "lluvia";
+  if (estado.includes("nieve") || estado.includes("nevada")) return "nieve";
+  if (estado.includes("nublado") || estado.includes("parcialmente")) return "nublado";
+  if (estado.includes("niebla")) return "niebla";
+  if (estado.includes("soleado") || estado.includes("despejado") || estado.includes("claro")) return "soleado";
+  return "otros";
+}
+
+export async function mostrarTodasLasCiudades(nombresCiudades) {
+  // Validar que el parámetro sea un array
+  if (!Array.isArray(nombresCiudades)) {
+    console.error('mostrarTodasLasCiudades esperaba un array, recibió:', typeof nombresCiudades);
+    return;
   }
-  
-  export async function mostrarTodasLasCiudades(ciudades) {
 
-    const contenedorMain = document.getElementById("app");
+  const contenedorMain = document.getElementById("app");
+  if (!contenedorMain) {
+    console.error('Elemento con id "app" no encontrado');
+    return;
+  }
 
-    contenedorMain.innerHTML = `  
+  contenedorMain.innerHTML = `  
     <section id="inicio" class="section">
       <h2>Clima Actual</h2>
       <div id="infoClima"></div>
@@ -96,25 +116,41 @@ export const ciudades = {
     </section>
     <div id="resultadoClima"></div>`;
 
-    const contenedor = document.getElementById('ciudadesContainer');
-    contenedor.innerHTML = '<p>Cargando clima...</p>';
-  
-    const cards = await Promise.all(ciudades.map(async ciudad => {
-      const datos = await obtenerClima(ciudad);
-      const climaClasificado = clasificarClima(datos.estadoClima);
-      return `
-        <div class="card ${datos.estadoClima.toLowerCase()}" data-nombre="${ciudad.toLowerCase()}" data-estado="${climaClasificado}">
-          <video class="bg-video" autoplay muted loop playsinline>
-            <source src="videos/${datos.estadoClima.toLowerCase()}.mp4" type="video/mp4">
-          </video>
-          <h3>${ciudad}</h3>
-          <p>${datos.temperatura}°C</p>
-          <p>${datos.estadoClima.toLowerCase()}</p>
-          <p>${datos.tiempoActual.replace("T"," Time: ")}</p>
-          <button onclick='agregarFavorito("${ciudad}")'>💛 Agregar a favoritos</button>
-        </div>
-      `;
+  const contenedor = document.getElementById('ciudadesContainer');
+  contenedor.innerHTML = '<p>Cargando clima...</p>';
+
+  try {
+    const cards = await Promise.all(nombresCiudades.map(async nombreCiudad => {
+      try {
+        const datos = await obtenerClima(nombreCiudad);
+        const climaClasificado = clasificarClima(datos.estadoClima);
+        
+        return `
+          <div class="card ${climaClasificado}" data-nombre="${nombreCiudad.toLowerCase()}" data-estado="${climaClasificado}">
+            <video class="bg-video" autoplay muted loop playsinline>
+              <source src="../videos/${climaClasificado}.mp4" type="video/mp4">
+            </video>
+            <h3>${nombreCiudad}</h3>
+            <p>${datos.temperatura}°C</p>
+            <p>${datos.estadoClima}</p>
+            <p>${datos.tiempoActual.replace("T", " Time: ")}</p>
+            <button onclick='agregarFavorito("${nombreCiudad}")'>💛 Agregar a favoritos</button>
+          </div>
+        `;
+      } catch (error) {
+        console.error(`Error procesando ciudad ${nombreCiudad}:`, error);
+        return `
+          <div class="card error">
+            <h3>${nombreCiudad}</h3>
+            <p>Error cargando datos</p>
+          </div>
+        `;
+      }
     }));
-  
+
     contenedor.innerHTML = cards.join('');
+  } catch (error) {
+    console.error('Error general al mostrar ciudades:', error);
+    contenedor.innerHTML = '<p>Error cargando el clima</p>';
   }
+}

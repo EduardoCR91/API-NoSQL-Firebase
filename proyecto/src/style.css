@@ -1,96 +1,177 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
+  padding: 0;
+  background: #e3e3e3;
+  color: #333;
+}
+
+.tabs, footer {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: space-around;
+  background: #3c89ad;
+  padding: 10px 0;
+  color: white;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.tabs button, footer button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.section {
+  padding: 20px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+.grid-container, .favoritos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .card {
-  padding: 2em;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.read-the-docs {
-  color: #888;
+form input {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+form button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: #4b89c3;
+  color: white;
+  border: none;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+#infoClima div {
+  background: #b2dfdb;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/*#listaFavoritos li {
+  background: #80cbc4;
+  margin: 5px;
+  padding: 10px;
+  list-style: none;
+  border-radius: 5px;
+}
+*/
+
+#listaFavoritos {
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  padding: 1rem;
+  border-radius: 12px;
+  color: rgb(0, 0, 0);
+  background-size: cover;
+  background-position: center;
+  transition: background 0.5s ease;
+}
+
+/*.despejado {
+  background: linear-gradient(to top, #fdbb2d, #22c1c3);
+}*/
+
+/*.parcialmente-nublado {
+  background: linear-gradient(to top, #d7d2cc, #304352);
+}*/
+
+/*.nublado {
+  background: linear-gradient(to top, #bdc3c7, #2c3e50);
+  color: white;
+}*/
+
+.lluvia,
+.lluvia-ligera,
+.lluvia-moderada,
+.despejado,
+.nevada,
+.parcialmente-nublado,
+.nublado,
+.desconocido,
+.niebla,
+.chubascos-ligeros,
+.llovizna-intensa,
+.llovizna-ligera {
+  background: linear-gradient(to top, #c6cdd2, #547898);
+  color: white;
+}
+
+/*.nevada {
+  background: linear-gradient(to top, #83a4d4, #b6fbff);
+}*/
+
+/*.desconocido {
+  background: linear-gradient(to top, #232526, #414345);
+}*/
+
+.bg-video{
+  width: 230px;
+  height: auto;
+  border-radius: 15px;
+}
+
+/* Botón hamburguesa oculto en escritorio */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+}
+
+/* Modo responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    margin: 10px;
+    background: #3c89ad;
   }
-  a:hover {
-    color: #747bff;
+
+  .tabs {
+    display: none;
+    flex-direction: column;
+    background: #3c89ad;
+    padding: 10px;
   }
-  button {
-    background-color: #f9f9f9;
+
+  footer.tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background: #3c89ad;
+    padding: 10px 0;
+    color: white;
+  }
+
+  .tabs.show {
+    display: flex;
+  }
+
+  .tabs button {
+    width: 100%;
+    margin: 5px 0;
   }
 }

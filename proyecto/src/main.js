@@ -1,48 +1,71 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebaseConfig.js';
+import { auth, db } from './firebaseConfig.js';
+import { addDoc, collection } from 'firebase/firestore';
 
-import { mostrarTodasLasCiudades, ciudades } from './componentes/js/weather.js';
-//import  mostrarPerfil from './componentes/perfil.js';
-import  mostrarLogout from './componentes/logout.js';
-import  mostrarLogin from './componentes/login.js';
-import  mostrarRegistro from './componentes/registro.js';
-import  mostrarPerfil from './componentes/perfil.js';
+// Importa los módulos necesarios
+import { inicializarNavegacion } from './componentes/js/navegacion.js';
+import { inicializarBusqueda } from './componentes/js/busqueda.js';
+import { inicializarFavoritos, agregarFavorito } from './componentes/js/favoritos.js';
+import { inicializarRegistro } from './componentes/js/registro.js';
+import { ciudades, codigosClima, mostrarTodasLasCiudades } from './componentes/js/weather.js';
+import { filtrar } from './componentes/js/filtrar.js';
+import { mostrarConfiguracion } from './componentes/js/config.js';
 
+function mostrarLogin() {
+  // Implementa tu lógica de login aquí
+  console.log('Mostrar login');
+}
 
-function renderMenu(usuario) {
-  const menu = document.getElementById("app");
-  
-  menu.innerHTML = "";
+function inicializarApp() {
+  // Hacer accesible globalmente
+  window.ciudades = ciudades;
+  window.mostrarTodasLasCiudades = mostrarTodasLasCiudades;
+  window.firebaseDB = db;
+  window.firebaseAddDoc = addDoc;
+  window.firebaseCollection = collection;
+  window.agregarFavorito = agregarFavorito;
 
-  let botones = [];
+  // Inicializar módulos
+  inicializarNavegacion();
+  inicializarBusqueda();
+  inicializarFavoritos();
+  inicializarRegistro();
+  filtrar();
+  mostrarConfiguracion();
+}
 
-  if (usuario) {
-    botones = [
-      { texto: "Home", fn: mostrarTodasLasCiudades },
-      { texto: "Perfil", fn: mostrarPerfil },
-      { texto: "Logout", fn: mostrarLogout },
-    ];
-  } else {
-    botones = [
-      { texto: "Login", fn: mostrarLogin },
-      { texto: "Registro", fn: mostrarRegistro },
-    ];
-  }
-
-  botones.forEach(({ texto, fn }) => {
-    const btn = document.createElement("button");
-    btn.textContent = texto;
-    btn.onclick = fn;
-    menu.appendChild(btn);
+function cargarCiudadesIniciales() {
+  // Cargar ciudades al inicio
+  const nombresCiudades = Object.keys(ciudades);
+  mostrarTodasLasCiudades(nombresCiudades).catch(error => {
+    console.error("Error al mostrar ciudades:", error);
   });
 }
 
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  inicializarApp();
+});
 
+// Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => console.log('Service Worker registrado', reg))
+      .catch(err => console.log('Error registrando Service Worker', err));
+  });
+}
+
+// Manejo de autenticación
 onAuthStateChanged(auth, (user) => {
-  renderMenu(user);
   if (user) {
-    mostrarTodasLasCiudades();
+    console.log('Usuario autenticado:', user.email);
+    // Solo cargar ciudades cuando hay un usuario autenticado
+    cargarCiudadesIniciales();
   } else {
+    console.log('Usuario no autenticado');
     mostrarLogin();
   }
+  
 });
+

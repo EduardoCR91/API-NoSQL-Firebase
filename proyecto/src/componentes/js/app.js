@@ -1,5 +1,5 @@
 // Importa los módulos de Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+/*import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 // Importa los módulos necesarios
@@ -48,4 +48,4 @@ document.addEventListener('DOMContentLoaded', () => {
   mostrarTodasLasCiudades(nombresCiudades).catch(error => {
     console.error("Error al mostrar ciudades:", error);
   });
-});
+});*/
