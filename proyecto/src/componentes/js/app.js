@@ -14,12 +14,15 @@ import { mostrarConfiguracion } from './config.js';
 // Variable para controlar si ya se inicializó
 let yaInicializado = false;
 
-export function inicializarAplicacionClima() {
+export async function inicializarAplicacionClima() {
   // Evitar inicializar múltiples veces
   if (yaInicializado) {
     console.log('La aplicación de clima ya está inicializada');
     return;
   }
+
+  // Esperar a que el DOM esté completamente listo
+  await esperarDOM();
 
   // Configuración de Firebase
   const firebaseConfig = {
@@ -42,21 +45,40 @@ export function inicializarAplicacionClima() {
   window.firebaseCollection = collection;
   window.agregarFavorito = agregarFavorito;
 
-  // Inicializar módulos
-  inicializarNavegacion();
-  agregarFavorito();
-  inicializarBusqueda();
-  inicializarFavoritos();
-  inicializarRegistro();
-  filtrar();
-  mostrarConfiguracion();
+  // Esperar un poco más para asegurar que todos los elementos estén en el DOM
+  await new Promise(resolve => setTimeout(resolve, 100));
 
-  // Cargar ciudades al inicio
-  const nombresCiudades = Object.keys(ciudades).slice(0, 100);
-  mostrarTodasLasCiudades(nombresCiudades).catch(error => {
-    console.error("Error al mostrar ciudades:", error);
+  try {
+    // Inicializar módulos en orden específico
+    console.log('Inicializando navegación...');
+    inicializarNavegacion();
+    
+    console.log('Inicializando otros módulos...');
+    inicializarBusqueda();
+    inicializarFavoritos();
+    inicializarRegistro();
+    filtrar();
+    mostrarConfiguracion();
+
+    // Cargar ciudades al inicio
+    const nombresCiudades = Object.keys(ciudades).slice(0, 100);
+    await mostrarTodasLasCiudades(nombresCiudades);
+
+    yaInicializado = true;
+    console.log('Aplicación de clima inicializada correctamente');
+  } catch (error) {
+    console.error('Error durante la inicialización:', error);
+    yaInicializado = false;
+  }
+}
+
+// Función auxiliar para esperar a que el DOM esté listo
+function esperarDOM() {
+  return new Promise((resolve) => {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', resolve);
+    } else {
+      resolve();
+    }
   });
-
-  yaInicializado = true;
-  console.log('Aplicación de clima inicializada correctamente');
 }

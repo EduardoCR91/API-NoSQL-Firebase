@@ -10,43 +10,59 @@
   <body>
     <div id="app">
       
-  <header class="header">
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-    <nav class="tabs" id="navMenu">
-      <button class="tab active" data-target="inicio">Inicio</button>
-      <button data-target="busqueda">Búsqueda</button>
-      <button data-target="filtrarPorClima">Filtro</button>
-      <button data-target="favoritos">Favoritos</button>
-      <button onclick="informacion()">Informacion</button>
-      <!--<button data-target="registro">Registro</button>-->
-      <button data-target="configuracion">Configuración</button>
-    </nav>
-  </header>
+      <header class="header">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <nav class="tabs" id="navMenuHeader">
+          <button class="tab active" data-target="inicio">Inicio</button>
+          <button data-target="busqueda">Búsqueda</button>
+          <button data-target="filtrarPorClima">Filtro</button>
+          <button data-target="favoritos">Favoritos</button>
+          <button onclick="informacion()">Informacion</button>
+          <!--<button data-target="registro">Registro</button>-->
+          <button data-target="configuracion">Configuración</button>
+        </nav>
+      </header>
 
-  <div class="contenedor">
+      <div class="contenedor">
+        <!-- Contenido autogenerado del clima -->
+      </div>
 
-    <!--Contenido autogenerado-->
-  </div>
+      <!-- Contenedor para las secciones dinámicas -->
+      <div id="secciones-container">
+        <div id="inicio" class="section" style="display: none;">
+          <!-- Contenido de inicio se carga dinámicamente -->
+        </div>
+        <div id="busqueda" class="section" style="display: none;">
+          <!-- Contenido de búsqueda se carga dinámicamente -->
+        </div>
+        <div id="filtrarPorClima" class="section" style="display: none;">
+          <!-- Contenido de filtro se carga dinámicamente -->
+        </div>
+        <div id="favoritos" class="section" style="display: none;">
+          <!-- Contenido de favoritos se carga dinámicamente -->
+        </div>
+        <div id="registro" class="section" style="display: none;">
+          <!-- Contenido de registro se carga dinámicamente -->
+        </div>
+        <div id="configuracion" class="section" style="display: none;">
+          <!-- Contenido de configuración se carga dinámicamente -->
+        </div>
+      </div>
 
-  <!-- Secciones -->
-  
-
-  <!-- Menú inferior -->
-  <footer class="tabs" id="navMenu">
-    <button data-target="inicio">Inicio</button>
-    <button data-target="favoritos">Favoritos</button>
-    <button data-target="registro">Registro</button>
-    <button data-target="configuracion">Config</button>
-  </footer>
-
-  <script src="./src/main.js" type="module"></script>
-  <script src="proyecto/src/componentes/js/informacion.js"></script>
-  <script src="proyecto/src/componentes/js/menu.js"></script>
-
-  
+      <!-- Menú inferior -->
+      <footer class="tabs" id="navMenuFooter">
+        <button data-target="inicio">Inicio</button>
+        <button data-target="favoritos">Favoritos</button>
+        <button data-target="registro">Registro</button>
+        <button data-target="configuracion">Config</button>
+      </footer>
+      
     </div>
+    
+    <!-- Menú de autenticación -->
     <div id="menu"></div>
     
+    <!-- Scripts - solo una vez cada uno -->
     <script type="module" src="src/main.js"></script>
     <script type="module" src="src/componentes/js/informacion.js"></script>
     <script type="module" src="src/componentes/js/menu.js"></script>
