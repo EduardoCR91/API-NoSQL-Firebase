@@ -1,5 +1,5 @@
 // Importa los módulos de Firebase
-/*import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 // Importa los módulos necesarios
@@ -11,8 +11,16 @@ import { ciudades, codigosClima, mostrarTodasLasCiudades } from './weather.js';
 import { filtrar } from './filtrar.js';
 import { mostrarConfiguracion } from './config.js';
 
+// Variable para controlar si ya se inicializó
+let yaInicializado = false;
 
-document.addEventListener('DOMContentLoaded', () => {
+export function inicializarAplicacionClima() {
+  // Evitar inicializar múltiples veces
+  if (yaInicializado) {
+    console.log('La aplicación de clima ya está inicializada');
+    return;
+  }
+
   // Configuración de Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyB1XBJlbdm3QFBU18cUbmfCO4wnImIXTjE",
@@ -48,4 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   mostrarTodasLasCiudades(nombresCiudades).catch(error => {
     console.error("Error al mostrar ciudades:", error);
   });
-});*/
+
+  yaInicializado = true;
+  console.log('Aplicación de clima inicializada correctamente');
+}

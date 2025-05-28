@@ -6,7 +6,7 @@ export function filtrar(){
     const nombresCiudades = Object.keys(ciudades).slice(0, 100); // Hasta 100
     mostrarTodasLasCiudades(nombresCiudades);
 
-    const contenedor = document.querySelector('.contenedor');
+    const contenedor = document.getElementById("app");
   
 
     contenedor.innerHTML += `

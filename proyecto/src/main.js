@@ -1,71 +1,64 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from './firebaseConfig.js';
-import { addDoc, collection } from 'firebase/firestore';
+import { auth } from './firebaseConfig.js';
 
-// Importa los módulos necesarios
-import { inicializarNavegacion } from './componentes/js/navegacion.js';
-import { inicializarBusqueda } from './componentes/js/busqueda.js';
-import { inicializarFavoritos, agregarFavorito } from './componentes/js/favoritos.js';
-import { inicializarRegistro } from './componentes/js/registro.js';
-import { ciudades, codigosClima, mostrarTodasLasCiudades } from './componentes/js/weather.js';
-import { filtrar } from './componentes/js/filtrar.js';
-import { mostrarConfiguracion } from './componentes/js/config.js';
+//import mostrarHome from './componentes/home.js';
+//import mostrarOriginal from './componentes/original.js';
+import mostrarPerfil from './componentes/perfil.js';
+import mostrarLogout from './componentes/logout.js';
+import mostrarLogin from './componentes/login.js';
+import mostrarRegistro from './componentes/registro.js';
 
-function mostrarLogin() {
-  // Implementa tu lógica de login aquí
-  console.log('Mostrar login');
+// Función para cargar el módulo de clima cuando el usuario está logueado
+async function cargarModuloClima() {
+  try {
+    // Esperar a que el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+      await new Promise(resolve => {
+        document.addEventListener('DOMContentLoaded', resolve);
+      });
+    }
+    
+    // Importa dinámicamente el módulo de clima
+    const { inicializarAplicacionClima } = await import('./componentes/js/app.js');
+    inicializarAplicacionClima();
+  } catch (error) {
+    console.error('Error al cargar el módulo de clima:', error);
+  }
 }
 
-function inicializarApp() {
-  // Hacer accesible globalmente
-  window.ciudades = ciudades;
-  window.mostrarTodasLasCiudades = mostrarTodasLasCiudades;
-  window.firebaseDB = db;
-  window.firebaseAddDoc = addDoc;
-  window.firebaseCollection = collection;
-  window.agregarFavorito = agregarFavorito;
+function renderMenu(usuario) {
+  const menu = document.getElementById("menu");
+  menu.innerHTML = "";
 
-  // Inicializar módulos
-  inicializarNavegacion();
-  inicializarBusqueda();
-  inicializarFavoritos();
-  inicializarRegistro();
-  filtrar();
-  mostrarConfiguracion();
-}
+  let botones = [];
 
-function cargarCiudadesIniciales() {
-  // Cargar ciudades al inicio
-  const nombresCiudades = Object.keys(ciudades);
-  mostrarTodasLasCiudades(nombresCiudades).catch(error => {
-    console.error("Error al mostrar ciudades:", error);
-  });
-}
-
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
-  inicializarApp();
-});
-
-// Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('Service Worker registrado', reg))
-      .catch(err => console.log('Error registrando Service Worker', err));
-  });
-}
-
-// Manejo de autenticación
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log('Usuario autenticado:', user.email);
-    // Solo cargar ciudades cuando hay un usuario autenticado
-    cargarCiudadesIniciales();
+  if (usuario) {
+    botones = [
+      { texto: "Perfil", fn: mostrarPerfil },
+      { texto: "Logout", fn: mostrarLogout },
+    ];
   } else {
-    console.log('Usuario no autenticado');
+    botones = [
+      { texto: "Login", fn: mostrarLogin },
+      { texto: "Registro", fn: mostrarRegistro },
+    ];
+  }
+
+  botones.forEach(({ texto, fn }) => {
+    const btn = document.createElement("button");
+    btn.textContent = texto;
+    btn.onclick = fn;
+    menu.appendChild(btn);
+  });
+}
+
+onAuthStateChanged(auth, (user) => {
+  renderMenu(user);
+  if (user) {
+    // Usuario logueado: cargar módulo de clima y mostrar home
+    cargarModuloClima();
+  } else {
+    // Usuario no logueado: mostrar login
     mostrarLogin();
   }
-  
 });
-
